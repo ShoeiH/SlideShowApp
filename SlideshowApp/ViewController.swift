@@ -10,11 +10,11 @@ import UIKit
 
 class ViewController: UIViewController {
     
-    
+    var timer: Timer!
     var images : [UIImage] = []
     var index = 0
-
-   
+    
+    
     @IBOutlet weak var imageview: UIImageView!
     override func viewDidLoad(){
         super.viewDidLoad()
@@ -29,35 +29,61 @@ class ViewController: UIViewController {
         if index < 0 {
             index = images.count - 1
         }
-         imageview.image = images[index]
-}
-
+        imageview.image = images[index]
+    }
+    
     
     @IBAction func next(_ sender: Any) {
-
+        
         index += 1
         
         if images.count - 1 < index{
-        index = 0
+            index = 0
         }
-         imageview.image = images[index]
+        imageview.image = images[index]
+    
     }
+    
+    @IBOutlet weak var Back: UIButton!
 
-
-     override func didReceiveMemoryWarning() {
+    @IBOutlet weak var Next: UIButton!
+    
+    @IBAction func play(_ sender: Any){
+        if self.timer == nil {
+            self.timer = Timer.scheduledTimer(timeInterval: 2, target: self, selector: #selector(slide), userInfo: nil, repeats: true)
+            Back.isEnabled = false
+            Next.isEnabled = false
+            
+        }
+        else {
+            self.timer.invalidate()
+            self.timer = nil
+        }
+    }
+    func slide(){
+        index += 1
+        
+        if images.count - 1 < index{
+            index = 0
+        }
+        imageview.image = images[index]
+    }
+    
+    
+    override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-     override func prepare(for segue: UIStoryboardSegue, sender: Any? ) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any? ) {
         
         let imageViewController:ImageViewController = segue.destination as! ImageViewController
         
         imageViewController.image = images[index]
-
         
-}
+        
+    }
     
-    @IBAction func unwind(_ segue: UIStoryboardSegue) {
+    @IBAction func unwind(segue: UIStoryboardSegue) {
     }
     
 }
